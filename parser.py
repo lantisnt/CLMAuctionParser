@@ -1,6 +1,6 @@
 from io import TextIOWrapper
 import sys
-import pprint
+import argparse
 from datetime import datetime
 from savedvariables_parser import SavedVariablesParser
 
@@ -17,10 +17,22 @@ def PrepareClassMap(ledger: list) -> None:
         if entry.get("_d") == "P0":
             classMap[entry.get("n")] = entry.get("c")
 
-def ParseSV(source: TextIOWrapper) -> list:
+def ParseSV(source: TextIOWrapper, guild: int) -> list:
     sv = GetSV(source.read())
-    PrepareClassMap(sv["CLM2_DB"][guild]["ledger"])
-    return sv["CLM2_DB"][guild]["personal"]["auctionHistory"]["stack"]
+    guilds = []
+    for key, info in sv["CLM2_DB"].items():
+        guilds.append(key)
+    if guild is None or (type(guild) != int) or (guild < 0) or (guild > (len(guilds) - 1)):
+        num = 0
+        for guildName in guilds:
+            print(str(num) + ") " + guildName + "\n")
+            num = num + 1
+        return None
+    else:
+        print("Parsing guild: " + guilds[guild])
+        PrepareClassMap(sv["CLM2_DB"][guilds[guild]]["ledger"])
+        return sv["CLM2_DB"][guilds[guild]]["personal"]["auctionHistory"]["stack"]
+    
 
 def BuildBidInfo(bids: dict, names: dict, upgraded: dict) -> str:
     bidInfo = {}
@@ -96,7 +108,7 @@ def BuildAuctionInfo(info: dict) -> str:
     return auction
 
 
-def OutputHTML(source: list, target: TextIOWrapper) -> None:
+def GenerateOutput(source: list, target: TextIOWrapper) -> None:
     header = open("input/template_begin.html", 'r').read()
     footer = open("input/template_end.html", 'r').read()
 
@@ -109,11 +121,17 @@ def OutputHTML(source: list, target: TextIOWrapper) -> None:
     target.write(footer)
     
 
-def main() -> int:
+def main(args: int) -> int:
     with open("input/ClassicLootManager.lua", 'r') as source:
         with open("output/AuctionHistory.html", 'w') as target:
-            OutputHTML(ParseSV(source), target)
-    return 0
+            result = ParseSV(source, args.guild)
+            if result is not None:
+                GenerateOutput(result, target)
+                return 0
+            else:
+                return 1
 
 if __name__ == '__main__':
-    sys.exit(main())
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--guild', dest='guild', action='store', type=int, help="Select the guild number found in file", default=None)
+    sys.exit(main(parser.parse_known_args(sys.argv)[0]))

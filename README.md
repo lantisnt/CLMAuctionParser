@@ -1,5 +1,6 @@
 # CLMAuctionParser
-
+## Demo
+![Demo](https://cdn.discordapp.com/attachments/813701698668462120/1036301641449754725/AuctionHistoryDemo.gif)
 ## Requirements
 Python v3.8+
 ## Installation

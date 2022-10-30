@@ -131,3 +131,6 @@ dmypy.json
 # output
 output
 venv
+
+# input
+input/*.lua

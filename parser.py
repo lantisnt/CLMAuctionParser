@@ -16,18 +16,21 @@ def ParseSV(source: TextIOWrapper) -> list:
 
 def BuildBidInfo(bids: dict, names: dict, upgraded: dict) -> str:
     bidInfo = {}
-    for name, value in bids.items():
-        if not bidInfo.get(name):
-            bidInfo[name] = {}
-        bidInfo[name]['value'] = value
-    for name, value in names.items():
-        if not bidInfo.get(name):
-            bidInfo[name] = {}
-        bidInfo[name]['type'] = value
-    for name, value in upgraded.items():
-        if not bidInfo.get(name):
-            bidInfo[name] = {}
-        bidInfo[name]['upgraded'] = value
+    if bids is not None:
+        for name, value in bids.items():
+            if not bidInfo.get(name):
+                bidInfo[name] = {}
+            bidInfo[name]['value'] = value
+    if names is not None:
+        for name, value in names.items():
+            if not bidInfo.get(name):
+                bidInfo[name] = {}
+            bidInfo[name]['type'] = value
+    if upgraded is not None:
+        for name, value in upgraded.items():
+            if not bidInfo.get(name):
+                bidInfo[name] = {}
+            bidInfo[name]['upgraded'] = value
 
     rows = ""
     template = [
@@ -59,7 +62,7 @@ def BuildAuctionInfo(info: dict) -> str:
         auction += '<h1>{0}</h1>'.format(timestamp)
         previousTimestamp = timestamp
     itemId = info['id']
-    bids = BuildBidInfo(info['bids'], info['names'], info['upgraded'])
+    bids = BuildBidInfo(info.get('bids'), info.get('names'), info.get('upgraded'))
 
     auction += '<h2><a href="https://www.wowhead.com/wotlk/item={0}" data-wh-icon-size="medium" target="_blank">{0}</a></h2>'.format(itemId)
     auction += '<table>' + bids + '</table>'

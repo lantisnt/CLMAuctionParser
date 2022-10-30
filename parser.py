@@ -3,6 +3,7 @@ import sys
 import argparse
 from datetime import datetime
 from savedvariables_parser import SavedVariablesParser
+from pathlib import Path
 
 guild = "alliance mirageraceway pun intended"
 previousTimestamp = ""
@@ -122,7 +123,7 @@ def GenerateOutput(source: list, target: TextIOWrapper) -> None:
     
 
 def main(args: int) -> int:
-    with open("input/ClassicLootManager.lua", 'r') as source:
+    with open(args.input, 'r') as source:
         with open("output/AuctionHistory.html", 'w') as target:
             result = ParseSV(source, args.guild)
             if result is not None:
@@ -133,5 +134,6 @@ def main(args: int) -> int:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--guild', dest='guild', action='store', type=int, help="Select the guild number found in file", default=None)
+    parser.add_argument('-g', '--guild', dest='guild', action='store', type=int, help="Select the guild number found in file", default=None)
+    parser.add_argument('-i', '--input', dest='input', action='store', type=Path, help="Full SV input path. Defaults to input/ClassicLootManager.lua", default="input/ClassicLootManager.lua")
     sys.exit(main(parser.parse_known_args(sys.argv)[0]))

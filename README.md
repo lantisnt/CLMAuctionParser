@@ -3,11 +3,13 @@
 ![Demo](https://cdn.discordapp.com/attachments/813701698668462120/1036301641449754725/AuctionHistoryDemo.gif)
 ## Requirements
 Python v3.8+
+Linux
+(For Windows you need to check how to install pip and start venv)
 ## Installation
 1. git clone repository
 2. python -m venv ./venv
 3. source venv/bin/activate
-4. pip -r requirements.txt
+4. pip install -r requirements.txt
 
 ## Usage
 1. python -m venv ./venv

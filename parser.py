@@ -41,7 +41,7 @@ def ParseSV(source: TextIOWrapper, guild: int) -> list:
     else:
         print("Parsing guild: " + guilds[guild])
         PrepareMappings(sv["CLM2_DB"][guilds[guild]]["ledger"])
-        return sv["CLM2_DB"][guilds[guild]]["personal"]["auctionHistory"]["stack"]
+        return sv["CLM2_DB"][guilds[guild]]["personal"]["auctionHistory2"]["stack"]
     
 
 def BuildBidInfo(bids: dict, names: dict, upgraded: dict, uuidDict: dict) -> str:
